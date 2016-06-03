@@ -11,6 +11,7 @@
 #include <string.h>
 #include <errno.h>
 #include <libgen.h>
+#include <getopt.h>
 
 
 
@@ -19,16 +20,16 @@ extern char **environ;
 
 char *prog_name = "<noname>";
 
-void die(char *const msg) __attribute__ ((__noreturn__));
+static void die(char *const msg) __attribute__ ((__noreturn__));
 
-void die(char *const msg)
+static void die(char *const msg)
 {
     fprintf(stderr, "%s: %s: %s\n", prog_name, msg, strerror(errno));
     exit(2);
 }
 
 
-void set_user(uid_t uid) {
+static void set_user(uid_t uid) {
     uid_t ruid, euid, suid;
     int status;
 
@@ -47,7 +48,7 @@ void set_user(uid_t uid) {
 }
 
 
-void maybe_drop_priv(void) {
+static void maybe_drop_priv(void) {
     uid_t ruid = getuid();
     uid_t euid = geteuid();
 
@@ -58,7 +59,7 @@ void maybe_drop_priv(void) {
 }
 
 
-void run_prog(char *const argv[], bool clobber_env) {
+static void run_prog(char *const argv[], bool clobber_env) {
     static const char *const empty = { NULL };
 
     if (clobber_env)
