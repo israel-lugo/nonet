@@ -29,7 +29,8 @@ static void die(char *const msg)
 }
 
 
-static void set_user(uid_t uid) {
+static void set_user(uid_t uid)
+{
     uid_t ruid, euid, suid;
     int status;
 
@@ -48,7 +49,8 @@ static void set_user(uid_t uid) {
 }
 
 
-static void maybe_drop_priv(void) {
+static void maybe_drop_priv(void)
+{
     uid_t ruid = getuid();
     uid_t euid = geteuid();
 
@@ -59,7 +61,8 @@ static void maybe_drop_priv(void) {
 }
 
 
-static void run_prog(char *const argv[], bool clobber_env) {
+static void run_prog(char *const argv[], bool clobber_env)
+{
     static const char *const empty = { NULL };
 
     if (clobber_env)
@@ -73,8 +76,8 @@ static void run_prog(char *const argv[], bool clobber_env) {
 }
 
 
-int main(int argc, char *argv[]) {
-
+int main(int argc, char *argv[])
+{
     int status;
 
     prog_name = basename(argv[0]);
