@@ -105,6 +105,13 @@ static void show_version_info(void)
 }
 
 
+static void print_help_string(void)
+{
+    fprintf(stderr, "Try '%s --help' for more information.\n", prog_name);
+}
+
+
+
 static void set_user(uid_t uid)
 {
     uid_t ruid, euid, suid;
@@ -251,12 +258,16 @@ static void parse_args(int argc, char *const argv[],
             case 'v':   /* --version */
                 show_version_info();
                 exit(0);
+            default:    /* invalid option or missing mandatory argument */
+                print_help_string();
+                exit(2);
         }
     }
 
     if (optind >= argc)
     {
         fprintf(stderr, "%s: missing command\n", prog_name);
+        print_help_string();
         exit(2);
     }
 
