@@ -30,12 +30,10 @@ struct cli_options {
 };
 
 
-static void die(char *const msg) __attribute__ ((__noreturn__));
+static void die(const char *msg) __attribute__ ((__noreturn__));
 
 
-
-
-static void die(char *const msg)
+static void die(const char *msg)
 {
     fprintf(stderr, "%s: %s: %s\n", prog_name, msg, strerror(errno));
     exit(2);
@@ -132,7 +130,7 @@ static void run_prog(char *const argv[], bool clobber_env)
  * case of success, 1 if the user was not found, or 2 if there's an error in
  * errno.
  */
-static int get_user(uid_t *p_uid, char *const username)
+static int get_user(uid_t *p_uid, const char *username)
 {
     struct passwd *passwd;
     int retval = 0;
