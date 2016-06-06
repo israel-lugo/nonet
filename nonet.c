@@ -178,7 +178,8 @@ static void run_prog(char *const argv[], bool clobber_env)
     }
 
     execvp(argv[0], argv);
-    fprintf(stderr, "%s: unable to run program: %s\n", prog_name, strerror(errno));
+    fprintf(stderr, "%s: unable to run '%s': %s\n", prog_name, argv[0],
+            strerror(errno));
     exit(1);
 }
 
