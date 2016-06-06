@@ -16,10 +16,15 @@
 
 
 
+#define COPYRIGHT "Copyright (C) 2016 Israel G. Lugo"
+#define PACKAGE_NAME "nonet"
+#define PACKAGE_VERSION "0.1"
+
+
 extern char **environ;
 
 
-char *prog_name = "<noname>";
+static const char *prog_name = "<noname>";
 
 
 struct cli_options {
@@ -40,15 +45,63 @@ static void die(const char *msg)
 }
 
 
-static void show_help(void)
+/*
+ * Show command-line options with pretty formatting.
+ */
+static void show_options(void)
 {
-    /* TODO */
+    static const struct { const char *name; const char *desc; } opts[] = {
+        { "-a, --allow-root", "allow running command as root user" },
+        { "-u, --user=USERNAME", "run command as specified user name" },
+        { "-h, --help", "display this help and exit" },
+        { "-v, --version", "output version information and exit" },
+        { "--", "stop processing command line options" }
+    };
+
+    unsigned int i;
+    for (i=0; i < sizeof(opts)/sizeof(opts[0]); i++)
+    {
+        printf("  %-28s%s\n", opts[i].name, opts[i].desc);
+    }
 }
 
 
+static void show_usage(void)
+{
+    printf("%s (%s) %s - execute a command without network access\n"
+           "%s\n"
+           "\n"
+           "This program executes a command in its own separate network namespace,\n"
+           "thus giving it a separate isolated view of the networking stack. It will\n"
+           "see no network interfaces, IP routing tables, firewall rules, and so on.\n"
+           "\n",
+           prog_name,
+           PACKAGE_NAME,
+           PACKAGE_VERSION,
+           COPYRIGHT);
+    printf(" Usage:\n"
+           "  %s [OPTIONS] [--] <command> [<args>...]\n"
+           "\n"
+           "\n"
+           "OPTIONS:\n",
+           prog_name);
+    show_options();
+}
+
+
+/*
+ * Show version information.
+ */
 static void show_version_info(void)
 {
-    /* TODO */
+    printf("%s %s\n"
+           "%s\n"
+           "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\n"
+           "This is free software: you are free to change and redistribute it.\n"
+           "There is NO WARRANTY, to the extent permitted by law.\n",
+           PACKAGE_NAME,
+           PACKAGE_VERSION,
+           COPYRIGHT);
 }
 
 
@@ -181,7 +234,7 @@ static void parse_args(int argc, char *const argv[],
                 p_cli_options->allow_root = true;
                 break;
             case 'h':   /* --help */
-                show_help();
+                show_usage();
                 exit(0);
             case 'u':   /* --user <username> */
                 status = get_user(&p_cli_options->uid, optarg);
