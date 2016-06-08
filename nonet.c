@@ -246,7 +246,7 @@ static void run_prog(char *const argv[], bool clobber_env)
 
 
 /*
- * Get a UID from a username.
+ * Get a UID from a user name or numeric user id.
  *
  * Sets the uid_t pointed to by p_uid, if the user is found. Returns zero in
  * case of success, 1 if the user was not found, or 2 if there's an error in
@@ -255,18 +255,34 @@ static void run_prog(char *const argv[], bool clobber_env)
 static int get_user(uid_t *p_uid, const char *username)
 {
     struct passwd *passwd;
+    char *endptr;
+    long maybe_uid;
     int retval = 0;
 
     errno = 0;
+    maybe_uid = strtol(username, &endptr, 10);
 
-    passwd = getpwnam(username);
+    if (endptr == username || *endptr != '\0')
+    {   /* string wasn't (only) numeric; probably a user name */
+        errno = 0;
+        passwd = getpwnam(username);
+    }
+    else if (errno != 0)
+    {   /* some kind of error (perhaps overflow) */
+        return 2;
+    }
+    else
+    {   /* string was all digits and converted properly */
+        errno = 0;
+        passwd = getpwuid(maybe_uid);
+    }
 
     if (passwd != NULL)
     {
         *p_uid = passwd->pw_uid;
     }
     else
-    {
+    {   /* check whether user wasn't found or an error occurred */
         if (errno == 0)
             retval = 1;
         else
