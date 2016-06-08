@@ -161,6 +161,8 @@ static void set_user(uid_t uid)
     uid_t ruid, euid, suid;
     int status;
 
+    /* TODO: Deal with groups. See what sudo does for an example. */
+
     status = setresuid(uid, uid, uid);
     if (status != 0)
         die("unable to set UID");
