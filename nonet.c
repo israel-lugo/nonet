@@ -60,6 +60,12 @@ struct cli_options {
 static void die(const char *msg) __attribute__ ((__noreturn__));
 
 
+/*
+ * Terminate program upon error.
+ *
+ * Receives a message, which will be printed to stderr along with the
+ * program's name and a libc (errno) error description.
+ */
 static void die(const char *msg)
 {
     fprintf(stderr, "%s: %s: %s\n", prog_name, msg, strerror(errno));
@@ -69,6 +75,8 @@ static void die(const char *msg)
 
 /*
  * Show command-line options with pretty formatting.
+ *
+ * To be used from within show_usage.
  */
 static void show_options(void)
 {
@@ -88,6 +96,9 @@ static void show_options(void)
 }
 
 
+/*
+ * Show usage information.
+ */
 static void show_usage(void)
 {
     printf("%s (%s) %s - execute a command without network access\n"
@@ -127,13 +138,24 @@ static void show_version_info(void)
 }
 
 
+/*
+ * Print a string directing the user to the help functionality.
+ *
+ * To be used whenever the user inputs an invalid argument.
+ */
 static void print_help_string(void)
 {
     fprintf(stderr, "Try '%s --help' for more information.\n", prog_name);
 }
 
 
-
+/*
+ * Change user in a safe way.
+ *
+ * Sets the effective, real and saved user id of the process to the
+ * specified uid. Makes sure the uid's were all changed correctly and
+ * aborts the program otherwise.
+ */
 static void set_user(uid_t uid)
 {
     uid_t ruid, euid, suid;
@@ -154,6 +176,15 @@ static void set_user(uid_t uid)
 }
 
 
+/*
+ * Try to loose root privileges in any way possible.
+ *
+ * If the user specified a non-root uid, change to it. If the program was
+ * run set-uid (real uid different from effective uid), change to the real
+ * uid. If not actually running as root (e.g. using POSIX capabilities), or
+ * running as root but allow_root is true, run as-is. Otherwise (running as
+ * root and no real or specified uid to fallback to), error out.
+ */
 static void deal_with_uid(bool allow_root, bool user_specified, uid_t uid)
 {
     if (user_specified)
@@ -190,6 +221,14 @@ static void deal_with_uid(bool allow_root, bool user_specified, uid_t uid)
 }
 
 
+/*
+ * Execute the specified program, replacing the current process.
+ *
+ * argv is an array of argument strings, the first of which (argv[0]) is
+ * the filename to execute. It must be terminated with a null pointer. If
+ * clobber_env is true, the environment is emptied before running the
+ * program. Exits on error.
+ */
 static void run_prog(char *const argv[], bool clobber_env)
 {
     static const char *const empty = { NULL };
@@ -238,7 +277,14 @@ static int get_user(uid_t *p_uid, const char *username)
 }
 
 
-
+/*
+ * Process command-line arguments.
+ *
+ * Receives the number of arguments (argc), the array of arguments (argv)
+ * and a pointer to a struct cli_options which will be modified as per the
+ * specified command-line arguments. The struct cli_options should already
+ * be initialized to safe defaults. Exits on error.
+ */
 static void parse_args(int argc, char *const argv[],
         struct cli_options *p_cli_options)
 {
