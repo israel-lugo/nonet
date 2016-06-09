@@ -1,4 +1,7 @@
 # nonet
+
+[![license](https://img.shields.io/badge/license-GPLv3+-blue.svg)](LICENSE)
+
 Execute a command without network access.
 
 This program executes a command in a completely isolated network namespace,
