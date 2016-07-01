@@ -21,6 +21,7 @@
 *.dylib
 
 # Executables
+nonet
 *.exe
 *.out
 *.app
