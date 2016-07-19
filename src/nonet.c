@@ -20,6 +20,12 @@
  * For suggestions, feedback or bug reports: israel.lugo@lugosys.com
  */
 
+
+#if HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
+/* get unshare() */
 #define _GNU_SOURCE
 #include <sched.h>
 
@@ -39,8 +45,6 @@
 
 
 #define COPYRIGHT "Copyright (C) 2016 Israel G. Lugo"
-#define PACKAGE_NAME "nonet"
-#define PACKAGE_VERSION "0.1"
 
 
 extern char **environ;
