@@ -1,6 +1,6 @@
 # nonet
 
-[![license](https://img.shields.io/badge/license-GPLv3+-blue.svg)](LICENSE)
+[![license](https://img.shields.io/badge/license-GPLv3+-blue.svg)](COPYING)
 [![Build Status](https://travis-ci.org/israel-lugo/nonet.svg?branch=master)](https://travis-ci.org/israel-lugo/nonet)
 
 Execute a command without network access.
