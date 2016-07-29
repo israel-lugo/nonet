@@ -3,14 +3,15 @@
 
 AC_PREREQ([2.59])
 AC_INIT([nonet], [0.1.0], [israel.lugo@lugosys.com])
+
+# unique source file --- primitive safety check 
 AC_CONFIG_SRCDIR([src/nonet.c])
-AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CC
 
 # Automake initialization
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([-Wall foreign])
 AC_PROG_MAKE_SET
 
 # Checks for libraries.
@@ -25,5 +26,8 @@ AC_TYPE_UID_T
 # Checks for library functions.
 AC_CHECK_FUNCS([strerror strtol])
 
+# Output files
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile src/Makefile])
+
 AC_OUTPUT
