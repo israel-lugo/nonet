@@ -40,7 +40,7 @@
 #include "common.h"
 
 
-/* Program's basename, for printing on error */
+/* Program's basename, for printing on error. Initialized by msg_init(). */
 const char *prog_name = NULL;
 
 
@@ -51,7 +51,9 @@ const char *prog_name = NULL;
  * MAY modify the string. The string MUST NOT be otherwise modified or freed
  * while this module is expected to be used.
  *
- * This function MUST be called before any other function defined here.
+ * This function MUST be called before calling any other function in this
+ * module, and before accessing any publicly accessible variable from this
+ * module (e.g. prog_name).
  */
 void msg_init(char *argv0)
 {
